@@ -53,11 +53,11 @@ const Hero = () => {
               comfort and style. Find your perfect fit today.
             </p>
             <div className="space-x-4">
-              <button className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800">
+              <button className="bg-black text-white px-8 py-3 my-2 rounded-md hover:bg-gray-800">
                 Shop Collection
               </button>
               <button className="border border-black text-black px-8 py-3 rounded-md hover:bg-gray-100">
-                Learn More
+                FAQ
               </button>
             </div>
           </div>
