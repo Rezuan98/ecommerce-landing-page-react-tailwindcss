@@ -107,6 +107,7 @@ const Featured = () => {
 
   // Handle size selection
   const handleSizeSelect = (size) => {
+    console.log("my selected side_id from productsize", size.size_id);
     // Only allow selection if size is in stock
     if (size.quantity > 0) {
       setSelectedSize(size);
@@ -163,7 +164,7 @@ const Featured = () => {
         shipping_cost: getShippingCost(),
         total: calculateTotal(),
         product_id: selectedProduct.id,
-        size_id: selectedSize.id,
+        size_id: selectedSize.size_id,
       };
 
       console.log("Sending order data:", orderData);

@@ -155,7 +155,7 @@ const Collections = () => {
         shipping_cost: getShippingCost(),
         total: calculateTotal(),
         product_id: selectedCollection.id,
-        size_id: selectedSize.id,
+        size_id: selectedSize.size_id,
       };
 
       // Submit order to API
