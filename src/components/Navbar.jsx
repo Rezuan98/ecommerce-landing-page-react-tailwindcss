@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, PhoneIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showPhone, setShowPhone] = useState(false);
 
   // Handle scroll effect
   useEffect(() => {
@@ -33,19 +34,32 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const togglePhoneNumber = () => {
+    setShowPhone(!showPhone);
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full bg-white z-50 shadow-sm transition-all duration-300 ${
         scrolled ? "py-2" : "py-4"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-8">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <span className="text-xl sm:text-2xl font-bold text-gray-900">
-              Samia Fashion
-            </span>
+            <div className="flex items-center">
+              <img
+                src="/samialogo.png"
+                alt="Samia Fashion"
+                className="h-50 w-auto object-contain"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/150x50?text=Samia+Fashion";
+                }}
+              />
+            </div>
           </div>
 
           {/* Desktop Navigation */}
@@ -63,9 +77,26 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 ml-2">
-              Shop Now
-            </button>
+            <div className="relative">
+              <button
+                className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 ml-2 flex items-center"
+                onClick={togglePhoneNumber}
+              >
+                <PhoneIcon className="h-4 w-4 mr-2" />
+                Contact Us
+              </button>
+              {showPhone && (
+                <div className="absolute right-0 mt-2 py-2 px-4 bg-white rounded-md shadow-lg z-10 border border-gray-200 min-w-max">
+                  <a
+                    href="tel:+123456789"
+                    className="flex items-center text-gray-800 hover:text-black"
+                  >
+                    <PhoneIcon className="h-4 w-4 mr-2" />
+                    (123) 456-7890
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -111,9 +142,13 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="px-3 py-2">
-            <button className="w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800">
-              Shop Now
-            </button>
+            <a
+              href="tel:+123456789"
+              className="w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
+            >
+              <PhoneIcon className="h-4 w-4 mr-2" />
+              Contact Us: (123) 456-7890
+            </a>
           </div>
         </div>
       </div>

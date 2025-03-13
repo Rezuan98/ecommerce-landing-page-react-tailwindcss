@@ -25,7 +25,6 @@ const FAQ = () => {
   ];
 
   const [activeIndex, setActiveIndex] = useState(null);
-  const [showContactInfo, setShowContactInfo] = useState(false);
 
   // Using pure CSS transitions for smooth animations
 
@@ -107,56 +106,6 @@ const FAQ = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Additional help section */}
-        <div className="mt-16 text-center bg-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="text-xl font-semibold mb-2">Still have questions?</h3>
-          <p className="text-gray-600 mb-6">
-            Our customer support team is here to help you.
-          </p>
-
-          {showContactInfo ? (
-            <div className="animate-fadeIn">
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-6 inline-block">
-                <div className="flex items-center justify-center mb-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-gray-700 mr-2"
-                  >
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                  <span className="font-medium text-gray-800">
-                    (123) 456-7890
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Available Mon-Fri, 9am-5pm EST
-                </p>
-              </div>
-              <button
-                onClick={() => setShowContactInfo(false)}
-                className="text-gray-600 underline hover:text-black transition-colors"
-              >
-                Hide Contact Info
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowContactInfo(true)}
-              className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300"
-            >
-              Contact Support
-            </button>
-          )}
         </div>
       </div>
     </section>
