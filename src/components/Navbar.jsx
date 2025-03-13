@@ -44,7 +44,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <span className="text-xl sm:text-2xl font-bold text-gray-900">
-              StyleHub
+              Samia Fashion
             </span>
           </div>
 
