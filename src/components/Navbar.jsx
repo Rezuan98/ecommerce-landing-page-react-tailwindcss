@@ -7,7 +7,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
-  const [logoUrl, setLogoUrl] = useState("/samialog.png");
+  const [logoUrl, setLogoUrl] = useState("/samialogo.png");
   const [phoneNumber, setPhoneNumber] = useState("(123) 456-7890");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,13 +15,23 @@ const Navbar = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get("/api/settings");
+        const response = await axios.get("http://127.0.0.1:8000/api/settings");
+        console.log("Settings response:", response.data); // Debug log to see the actual structure
+
         if (response.data && response.data.success) {
           const { logo, phone_number, favicon } = response.data.data;
 
           // Update logo URL if available
           if (logo) {
-            setLogoUrl(`/storage/${logo}`);
+            // The full URL should be returned from the API
+            // If it's not, we need to construct it properly
+            if (logo.startsWith("http")) {
+              setLogoUrl(logo);
+            } else {
+              // Assume the backend is expecting a relative path from the storage directory
+              setLogoUrl(`http://127.0.0.1:8000/storage/${logo}`);
+            }
+            console.log("Logo URL set to:", logoUrl);
           }
 
           // Update phone number if available
@@ -36,7 +46,9 @@ const Navbar = () => {
               document.createElement("link");
             link.type = "image/x-icon";
             link.rel = "icon";
-            link.href = `/storage/${favicon}`;
+            link.href = favicon.startsWith("http")
+              ? favicon
+              : `http://127.0.0.1:8000/storage/${favicon}`;
             document.head.appendChild(link);
           }
         }
@@ -99,13 +111,14 @@ const Navbar = () => {
           <div className="flex-shrink-0">
             <div className="flex items-center">
               {isLoading ? (
-                <div className="h-50 w-36 bg-gray-200 animate-pulse rounded"></div>
+                <div className="h-10 w-36 bg-gray-200 animate-pulse rounded"></div>
               ) : (
                 <img
                   src={logoUrl}
                   alt="Samia Fashion"
                   className="h-50 w-auto object-contain"
                   onError={(e) => {
+                    console.error("Logo failed to load:", logoUrl);
                     e.target.onerror = null;
                     e.target.src =
                       "https://via.placeholder.com/150x50?text=Samia+Fashion";
