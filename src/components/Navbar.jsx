@@ -1,11 +1,54 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
 import { Bars3Icon, XMarkIcon, PhoneIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/samialog.png");
+  const [phoneNumber, setPhoneNumber] = useState("(123) 456-7890");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch logo and phone number from backend
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get("/api/settings");
+        if (response.data && response.data.success) {
+          const { logo, phone_number, favicon } = response.data.data;
+
+          // Update logo URL if available
+          if (logo) {
+            setLogoUrl(`/storage/${logo}`);
+          }
+
+          // Update phone number if available
+          if (phone_number) {
+            setPhoneNumber(phone_number);
+          }
+
+          // Update favicon if available
+          if (favicon) {
+            const link =
+              document.querySelector('link[rel="icon"]') ||
+              document.createElement("link");
+            link.type = "image/x-icon";
+            link.rel = "icon";
+            link.href = `/storage/${favicon}`;
+            document.head.appendChild(link);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch site settings:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   // Handle scroll effect
   useEffect(() => {
@@ -38,6 +81,12 @@ const Navbar = () => {
     setShowPhone(!showPhone);
   };
 
+  // Format phone number for tel: links
+  const formatPhoneForTel = (phone) => {
+    // Remove all non-numeric characters
+    return phone.replace(/\D/g, "");
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full bg-white z-50 shadow-sm transition-all duration-300 ${
@@ -49,16 +98,20 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <div className="flex items-center">
-              <img
-                src="/samialogo.png"
-                alt="Samia Fashion"
-                className="h-50 w-auto object-contain"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://via.placeholder.com/150x50?text=Samia+Fashion";
-                }}
-              />
+              {isLoading ? (
+                <div className="h-50 w-36 bg-gray-200 animate-pulse rounded"></div>
+              ) : (
+                <img
+                  src={logoUrl}
+                  alt="Samia Fashion"
+                  className="h-50 w-auto object-contain"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/150x50?text=Samia+Fashion";
+                  }}
+                />
+              )}
             </div>
           </div>
 
@@ -88,11 +141,11 @@ const Navbar = () => {
               {showPhone && (
                 <div className="absolute right-0 mt-2 py-2 px-4 bg-white rounded-md shadow-lg z-10 border border-gray-200 min-w-max">
                   <a
-                    href="tel:+123456789"
+                    href={`tel:+${formatPhoneForTel(phoneNumber)}`}
                     className="flex items-center text-gray-800 hover:text-black"
                   >
                     <PhoneIcon className="h-4 w-4 mr-2" />
-                    (123) 456-7890
+                    {phoneNumber}
                   </a>
                 </div>
               )}
@@ -143,11 +196,11 @@ const Navbar = () => {
           ))}
           <div className="px-3 py-2">
             <a
-              href="tel:+123456789"
+              href={`tel:+${formatPhoneForTel(phoneNumber)}`}
               className="w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
             >
               <PhoneIcon className="h-4 w-4 mr-2" />
-              Contact Us: (123) 456-7890
+              Contact Us: {phoneNumber}
             </a>
           </div>
         </div>
