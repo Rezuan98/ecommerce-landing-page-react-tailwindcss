@@ -1,143 +1,286 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 const Hero = () => {
-  const images = [
-    {
-      url: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b",
-      alt: "Fashion Model 1",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-      alt: "Fashion Model 2",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1490725263030-1f0521cec8ec",
-      alt: "Fashion Model 3",
-    },
-  ];
-
+  const [sliders, setSliders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const sliderTimerRef = useRef(null);
 
-  // Auto-slide functionality
+  // Fetch sliders from API
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 5000); // Change slide every 5 seconds
+    const fetchSliders = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://127.0.0.1:8000/api/sliders");
 
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, [images.length]);
+        // Format the data for our slider
+        const formattedSliders = response.data.map((slider) => ({
+          url: `http://127.0.0.1:8000/storage/${slider.image}`,
+          alt: `Slider Image ${slider.id}`,
+          id: slider.id,
+          order: slider.order,
+        }));
+
+        // Sort by order if available
+        formattedSliders.sort((a, b) => a.order - b.order);
+
+        setSliders(formattedSliders);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching sliders:", err);
+        setError("Failed to load slider images");
+        setLoading(false);
+      }
+    };
+
+    fetchSliders();
+
+    // Cleanup function
+    return () => {
+      if (sliderTimerRef.current) {
+        clearInterval(sliderTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Auto-slide functionality with restart on manual navigation
+  useEffect(() => {
+    if (sliders.length <= 1) return;
+
+    const startSliderTimer = () => {
+      if (sliderTimerRef.current) {
+        clearInterval(sliderTimerRef.current);
+      }
+
+      sliderTimerRef.current = setInterval(() => {
+        setIsTransitioning(true);
+        setCurrentImage((prev) => (prev === sliders.length - 1 ? 0 : prev + 1));
+
+        // Reset transitioning state after animation completes
+        setTimeout(() => {
+          setIsTransitioning(false);
+        }, 700); // Slightly shorter than the transition duration
+      }, 6000); // Change slide every 6 seconds
+    };
+
+    startSliderTimer();
+
+    return () => {
+      if (sliderTimerRef.current) {
+        clearInterval(sliderTimerRef.current);
+      }
+    };
+  }, [sliders.length, currentImage]);
 
   // Manual navigation
   const goToSlide = (index) => {
+    if (isTransitioning || index === currentImage) return;
+    setIsTransitioning(true);
     setCurrentImage(index);
+
+    // Reset timer when manually navigating
+    if (sliderTimerRef.current) {
+      clearInterval(sliderTimerRef.current);
+    }
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700);
   };
 
   const goToPrevious = () => {
-    setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentImage((prev) => (prev === 0 ? sliders.length - 1 : prev - 1));
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700);
   };
 
   const goToNext = () => {
-    setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentImage((prev) => (prev === sliders.length - 1 ? 0 : prev + 1));
+
+    // Reset transitioning state after animation completes
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700);
   };
+
+  // Render fallback during initial loading or if no sliders
+  if (loading || sliders.length === 0) {
+    return (
+      <section id="home" className="pt-20 lg:pt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center py-8">
+            <div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Discover Your Perfect Style
+              </h1>
+              <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                Explore our latest collection of premium clothing designed for
+                comfort and style. Find your perfect fit today.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                  Shop Collection
+                </button>
+                <button className="border-2 border-black text-black px-8 py-3 rounded-md hover:bg-gray-100 transition-colors duration-300">
+                  FAQ
+                </button>
+              </div>
+            </div>
+            {/* No fallback image here - will just show text content when no sliders */}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="home" className="pt-20 lg:pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-12 items-center py-8">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center py-8">
+          <div className="order-2 md:order-1">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
               Discover Your Perfect Style
             </h1>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 max-w-lg">
               Explore our latest collection of premium clothing designed for
               comfort and style. Find your perfect fit today.
             </p>
-            <div className="space-x-4">
-              <button className="bg-black text-white px-8 py-3 my-2 rounded-md hover:bg-gray-800">
+            <div className="flex flex-wrap gap-4">
+              <button className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 Shop Collection
               </button>
-              <button className="border border-black text-black px-8 py-3 rounded-md hover:bg-gray-100">
+              <button className="border-2 border-black text-black px-8 py-3 rounded-md hover:bg-gray-100 transition-colors duration-300">
                 FAQ
               </button>
             </div>
           </div>
-          <div className="relative overflow-hidden rounded-lg">
+
+          <div className="relative overflow-hidden rounded-lg shadow-2xl order-1 md:order-2 h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
+            {/* Error Message */}
+            {error && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+                <p className="text-red-500">{error}</p>
+              </div>
+            )}
+
             {/* Image Slider */}
-            <div className="relative h-[400px]">
-              {images.map((image, index) => (
+            <div className="relative w-full h-full">
+              {sliders.map((image, index) => (
                 <div
-                  key={index}
-                  className={`absolute w-full h-full transition-opacity duration-1000 ease-in-out ${
-                    index === currentImage ? "opacity-100" : "opacity-0"
+                  key={image.id || index}
+                  className={`absolute w-full h-full transition-all duration-1000 ease-in-out ${
+                    index === currentImage
+                      ? "opacity-100 scale-100 z-10"
+                      : "opacity-0 scale-105 z-0"
                   }`}
+                  style={{
+                    transform:
+                      index === currentImage
+                        ? "translate3d(0,0,0)"
+                        : `translate3d(${
+                            index < currentImage ? "-5%" : "5%"
+                          },0,0)`,
+                  }}
                 >
                   <img
                     src={image.url}
                     alt={image.alt}
-                    className="rounded-lg shadow-xl w-full h-full object-cover"
+                    className="rounded-lg w-full h-full object-cover"
+                    loading={index === 0 ? "eager" : "lazy"}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-lg"></div>
                 </div>
               ))}
             </div>
 
-            {/* Navigation Arrows */}
-            <button
-              onClick={goToPrevious}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors"
-              aria-label="Previous slide"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={goToNext}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors"
-              aria-label="Next slide"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-
-            {/* Dot Indicators */}
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-              {images.map((_, index) => (
+            {/* Navigation Arrows - Only show if more than one slide */}
+            {sliders.length > 1 && (
+              <>
                 <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentImage
-                      ? "bg-white"
-                      : "bg-white/50 hover:bg-white/80"
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                ></button>
-              ))}
-            </div>
+                  onClick={goToPrevious}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition-colors duration-300 z-20 focus:outline-none focus:ring-2 focus:ring-white"
+                  aria-label="Previous slide"
+                  disabled={isTransitioning}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={goToNext}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition-colors duration-300 z-20 focus:outline-none focus:ring-2 focus:ring-white"
+                  aria-label="Next slide"
+                  disabled={isTransitioning}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Dot Indicators */}
+                <div className="absolute bottom-5 left-0 right-0 flex justify-center space-x-3 z-20">
+                  {sliders.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        index === currentImage
+                          ? "bg-white w-6"
+                          : "bg-white/40 hover:bg-white/70"
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                      disabled={isTransitioning}
+                    ></button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Progress Bar */}
+            {sliders.length > 1 && (
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-20">
+                <div
+                  className="h-full bg-white transition-all duration-300 ease-linear"
+                  style={{
+                    width: `${(currentImage / (sliders.length - 1)) * 100}%`,
+                    transitionDuration: isTransitioning ? "700ms" : "0ms",
+                  }}
+                ></div>
+              </div>
+            )}
           </div>
         </div>
       </div>
