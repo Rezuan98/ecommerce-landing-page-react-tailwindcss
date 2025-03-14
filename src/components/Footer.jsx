@@ -1,4 +1,34 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 const Footer = () => {
+  const [socialLinks, setSocialLinks] = useState({
+    facebook_url: "#",
+    instagram_url: "#",
+    twitter_url: "#",
+  });
+  const [setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSocialLinks = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/footer-social"
+        );
+
+        if (response.data && response.data.status === "success") {
+          setSocialLinks(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching social links:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSocialLinks();
+  }, []);
+
   return (
     <footer className="bg-gray-900 text-white py-10">
       <div className="max-w-6xl mx-auto px-4">
@@ -6,13 +36,18 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* Brand column */}
           <div className="md:w-1/3">
-            <h3 className="text-xl font-bold mb-3">StyleHub</h3>
+            <h3 className="text-xl font-bold mb-3">Samia Fashion</h3>
             <p className="text-gray-400 mb-4">
               Premium clothing for the modern individual.
             </p>
             <div className="flex space-x-4">
-              {/* Social media icons */}
-              <a href="#" className="text-gray-400 hover:text-white">
+              {/* Social media icons with dynamic links */}
+              <a
+                href={socialLinks.facebook_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white"
+              >
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -26,7 +61,12 @@ const Footer = () => {
                   ></path>
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a
+                href={socialLinks.instagram_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white"
+              >
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -40,7 +80,12 @@ const Footer = () => {
                   ></path>
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a
+                href={socialLinks.twitter_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white"
+              >
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -91,32 +136,48 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter signup - simplified */}
+          {/* Store location information - replacing newsletter */}
+          {/* Payment Methods & Delivery */}
           <div className="md:w-1/3">
             <h4 className="font-medium text-sm uppercase tracking-wider mb-4">
-              Stay Updated
+              We Accept
             </h4>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="bg-gray-800 text-sm px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-white rounded-l"
-              />
-              <button className="bg-white text-gray-900 px-4 py-2 text-sm font-medium rounded-r hover:bg-gray-200">
-                Subscribe
-              </button>
+            <div className="flex flex-wrap gap-3 mb-5">
+              <div className="bg-white text-gray-900 px-3 py-2 rounded-md text-xs font-medium">
+                Visa
+              </div>
+              <div className="bg-white text-gray-900 px-3 py-2 rounded-md text-xs font-medium">
+                Mastercard
+              </div>
+              <div className="bg-white text-gray-900 px-3 py-2 rounded-md text-xs font-medium">
+                PayPal
+              </div>
+              <div className="bg-white text-gray-900 px-3 py-2 rounded-md text-xs font-medium">
+                Apple Pay
+              </div>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Sign up for our newsletter to receive updates and exclusive
-              offers.
-            </p>
+
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-4 mt-6">
+              Delivery Partners
+            </h4>
+            <div className="flex flex-wrap gap-3">
+              <div className="bg-gray-800 text-gray-300 px-3 py-2 rounded-md text-xs font-medium">
+                DHL Express
+              </div>
+              <div className="bg-gray-800 text-gray-300 px-3 py-2 rounded-md text-xs font-medium">
+                FedEx
+              </div>
+              <div className="bg-gray-800 text-gray-300 px-3 py-2 rounded-md text-xs font-medium">
+                UPS
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Simple copyright bar */}
-        <div className="border-t border-gray-800 mt-8 pt-6 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            © 2024 StyleHub. All rights reserved.
+        <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between">
+          <p className="text-sm text-gray-500 mb-4 md:mb-0">
+            © 2025 Samia Fashion. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a href="#" className="text-xs text-gray-500 hover:text-gray-400">

@@ -145,7 +145,7 @@ const Navbar = () => {
             ))}
             <div className="relative">
               <button
-                className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 ml-2 flex items-center"
+                className="bg-[#e773a3] text-black font-bold px-4 py-2 rounded-md hover:bg-gray-800 hover:text-white ml-2 flex items-center"
                 onClick={togglePhoneNumber}
               >
                 <PhoneIcon className="h-4 w-4 mr-2" />
@@ -210,7 +210,7 @@ const Navbar = () => {
           <div className="px-3 py-2">
             <a
               href={`tel:+${formatPhoneForTel(phoneNumber)}`}
-              className="w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
+              className="w-full bg-[#e773a3] text-black font-bold px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
             >
               <PhoneIcon className="h-4 w-4 mr-2" />
               Contact Us: {phoneNumber}

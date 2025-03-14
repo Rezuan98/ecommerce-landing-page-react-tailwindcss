@@ -14,21 +14,6 @@ const Hero = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const sliderTimerRef = useRef(null);
 
-  // Define scroll functions outside of useEffect so they're accessible to the JSX
-  const scrollToCollection = () => {
-    const collectionSection = document.getElementById("collections");
-    if (collectionSection) {
-      collectionSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const scrollToFAQ = () => {
-    const faqSection = document.getElementById("faq");
-    if (faqSection) {
-      faqSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   // Fetch hero content and sliders from API
   useEffect(() => {
     const fetchData = async () => {
@@ -147,6 +132,21 @@ const Hero = () => {
     }, 700);
   };
 
+  // Scroll to section functions
+  const scrollToCollection = () => {
+    const collectionSection = document.getElementById("latest-collection");
+    if (collectionSection) {
+      collectionSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToFAQ = () => {
+    const faqSection = document.getElementById("faq");
+    if (faqSection) {
+      faqSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // Render fallback during initial loading or if no sliders
   if (loading || sliders.length === 0) {
     return (
@@ -163,11 +163,10 @@ const Hero = () => {
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={scrollToCollection}
-                  className="bg-[#e773a3] text-black font-bold px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="bg-[#f7b7d2] text-black px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
                   Shop Collection
                 </button>
-
                 <button
                   onClick={scrollToFAQ}
                   className="bg-black text-white border-2 border-black px-8 py-3 rounded-md hover:bg-gray-900 transition-colors duration-300"
@@ -197,11 +196,10 @@ const Hero = () => {
             <div className="flex flex-wrap gap-4">
               <button
                 onClick={scrollToCollection}
-                className="bg-[#e773a3] text-black font-bold px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="bg-[#f7b7d2] text-black px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 Shop Collection
               </button>
-
               <button
                 onClick={scrollToFAQ}
                 className="bg-black text-white border-2 border-black px-8 py-3 rounded-md hover:bg-gray-900 transition-colors duration-300"
