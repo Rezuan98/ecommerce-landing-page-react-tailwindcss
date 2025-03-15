@@ -52,7 +52,7 @@ const ProductDetails = ({
           {isCollection && item.discount ? (
             <>
               <span className="text-gray-500 line-through ml-2">
-                ${parseFloat(item.discount).toFixed(2)}
+                ৳{parseFloat(item.discount).toFixed(2)}
               </span>
               <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
                 {Math.round((1 - item.price / item.discount) * 100)}% OFF

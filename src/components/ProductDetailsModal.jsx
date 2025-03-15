@@ -1,5 +1,5 @@
 // components/ProductDetailsModal.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
@@ -10,6 +10,11 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
   const [modalAnimation, setModalAnimation] = useState(false);
   const [activeImage, setActiveImage] = useState(initialImage);
   const [productImages, setProductImages] = useState([]);
+
+  // Zoom related states
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const imageContainerRef = useRef(null);
 
   // Fetch product details when modal opens
   useEffect(() => {
@@ -81,6 +86,26 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
     setActiveImage(image);
   };
 
+  // Image zoom functions
+  const handleMouseEnter = () => {
+    setIsZoomed(true);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!imageContainerRef.current) return;
+
+    const { left, top, width, height } =
+      imageContainerRef.current.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+
+    setZoomPosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -124,15 +149,43 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column - Product Images */}
               <div>
-                {/* Main Image Display */}
-                <div className="rounded-lg overflow-hidden border border-gray-200 mb-4 h-64 md:h-80">
+                {/* Main Image Display with Hover Zoom Capability */}
+                <div
+                  ref={imageContainerRef}
+                  className="rounded-lg overflow-hidden border border-gray-200 mb-4 h-64 md:h-80 relative cursor-zoom-in"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                >
                   {activeImage && (
-                    <img
-                      src={activeImage}
-                      alt={productDetails?.name}
-                      className="w-full h-full object-contain"
-                    />
+                    <>
+                      <img
+                        src={activeImage}
+                        alt={productDetails?.name}
+                        className={`w-full h-full object-contain transition-opacity duration-200 ${
+                          isZoomed ? "opacity-0" : "opacity-100"
+                        }`}
+                      />
+                      {isZoomed && (
+                        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
+                          <div
+                            className="absolute top-0 left-0 w-full h-full transform-gpu"
+                            style={{
+                              backgroundImage: `url(${activeImage})`,
+                              backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                              backgroundSize: "250%", // Increased zoom level
+                              backgroundRepeat: "no-repeat",
+                            }}
+                          />
+                        </div>
+                      )}
+                    </>
                   )}
+
+                  {/* Zoom indicator */}
+                  <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                    Hover to zoom
+                  </div>
                 </div>
 
                 {/* Thumbnail Row */}

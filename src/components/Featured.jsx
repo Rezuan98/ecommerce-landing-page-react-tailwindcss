@@ -284,6 +284,7 @@ const Featured = () => {
           initialImage={selectedProductImage}
         />
 
+        {/* Always show the View All/Show Less button regardless of product count */}
         <div className="text-center mt-12">
           <button
             onClick={() => setShowAllProducts(!showAllProducts)}
