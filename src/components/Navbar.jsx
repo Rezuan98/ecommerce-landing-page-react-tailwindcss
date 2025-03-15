@@ -15,7 +15,9 @@ const Navbar = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/settings");
+        const response = await axios.get(
+          "https://dashboard.samiafashions.com/api/settings"
+        );
         console.log("Settings response:", response.data); // Debug log to see the actual structure
 
         if (response.data && response.data.success) {
