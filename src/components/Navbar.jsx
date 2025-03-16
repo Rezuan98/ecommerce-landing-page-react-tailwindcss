@@ -31,7 +31,7 @@ const Navbar = () => {
               setLogoUrl(logo);
             } else {
               // Assume the backend is expecting a relative path from the storage directory
-              setLogoUrl(`http://127.0.0.1:8000/storage/${logo}`);
+              setLogoUrl(`https://dashboard.samiafashions.com/storage/${logo}`);
             }
             console.log("Logo URL set to:", logoUrl);
           }
@@ -50,7 +50,7 @@ const Navbar = () => {
             link.rel = "icon";
             link.href = favicon.startsWith("http")
               ? favicon
-              : `http://127.0.0.1:8000/storage/${favicon}`;
+              : `https://dashboard.samiafashions.com/storage/${favicon}`;
             document.head.appendChild(link);
           }
         }
@@ -109,25 +109,32 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-8">
         <div className="flex items-center justify-between h-14">
-          {/* Logo */}
+          {/* Logo with Link to Home */}
           <div className="flex-shrink-0">
-            <div className="flex items-center">
-              {isLoading ? (
-                <div className="h-10 w-36 bg-gray-200 animate-pulse rounded"></div>
-              ) : (
-                <img
-                  src={logoUrl}
-                  alt="Samia Fashion"
-                  className="h-50 w-auto object-contain"
-                  onError={(e) => {
-                    console.error("Logo failed to load:", logoUrl);
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://via.placeholder.com/150x50?text=Samia+Fashion";
-                  }}
-                />
-              )}
-            </div>
+            <Link
+              to="home"
+              smooth={true}
+              duration={500}
+              className="cursor-pointer"
+            >
+              <div className="flex items-center">
+                {isLoading ? (
+                  <div className="h-10 w-36 bg-gray-200 animate-pulse rounded"></div>
+                ) : (
+                  <img
+                    src={logoUrl}
+                    alt="Samia Fashion"
+                    className="h-50 w-auto object-contain"
+                    onError={(e) => {
+                      console.error("Logo failed to load:", logoUrl);
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/150x50?text=Samia+Fashion";
+                    }}
+                  />
+                )}
+              </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}

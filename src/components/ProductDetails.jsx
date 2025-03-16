@@ -47,7 +47,7 @@ const ProductDetails = ({
         <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
         <div className="mb-4 flex items-center">
           <span className="font-bold text-xl">
-            ${parseFloat(item.price).toFixed(2)}
+            ৳{parseFloat(item.price).toFixed(2)}
           </span>
           {isCollection && item.discount ? (
             <>
@@ -63,7 +63,7 @@ const ProductDetails = ({
             item.discount_price && (
               <>
                 <span className="text-gray-500 line-through ml-2">
-                  ${parseFloat(item.discount_price).toFixed(2)}
+                  ৳{parseFloat(item.discount_price).toFixed(2)}
                 </span>
                 <span className="ml-2 bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded">
                   {Math.round((1 - item.price / item.discount_price) * 100)}%

@@ -32,7 +32,7 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/products/${productId}`
+        `https://dashboard.samiafashions.com/api/products/${productId}`
       );
 
       if (response.data) {

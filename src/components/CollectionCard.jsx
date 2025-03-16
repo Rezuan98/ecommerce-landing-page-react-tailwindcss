@@ -48,11 +48,11 @@ const CollectionCard = ({
         <div className="flex justify-between items-center">
           <div>
             <span className="text-gray-900 font-bold">
-              ${parseInt(collection.price)}
+              ৳{parseInt(collection.price)}
             </span>
             {collection.discount && (
               <span className="text-gray-500 line-through text-sm ml-2">
-                ${parseInt(collection.discount)}
+                ৳{parseInt(collection.discount)}
               </span>
             )}
           </div>

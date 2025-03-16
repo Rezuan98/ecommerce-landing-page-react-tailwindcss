@@ -36,7 +36,9 @@ const Hero = () => {
         setLoading(true);
 
         // Fetch hero content
-        const heroResponse = await axios.get("http://127.0.0.1:8000/api/hero");
+        const heroResponse = await axios.get(
+          "https://dashboard.samiafashions.com/api/hero"
+        );
         if (heroResponse.data) {
           setHeroContent({
             title: heroResponse.data.title,
@@ -46,12 +48,12 @@ const Hero = () => {
 
         // Fetch sliders
         const slidersResponse = await axios.get(
-          "http://127.0.0.1:8000/api/sliders"
+          "https://dashboard.samiafashions.com/api/sliders"
         );
 
         // Format the data for our slider
         const formattedSliders = slidersResponse.data.map((slider) => ({
-          url: `http://127.0.0.1:8000/storage/${slider.image}`,
+          url: `https://dashboard.samiafashions.com/storage/${slider.image}`,
           alt: `Slider Image ${slider.id}`,
           id: slider.id,
           order: slider.order,

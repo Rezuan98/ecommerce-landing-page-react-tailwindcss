@@ -46,14 +46,14 @@ const FeaturedProductCard = ({
         <div className="flex justify-between items-center">
           <div>
             <span className="text-gray-900 font-bold">
-              $
+              ৳
               {typeof product.price === "number"
                 ? product.price.toFixed(2)
                 : parseFloat(product.price).toFixed(2)}
             </span>
             {product.discount_price && (
               <span className="text-gray-500 line-through text-sm ml-2">
-                $
+                ৳
                 {typeof product.discount_price === "number"
                   ? product.discount_price.toFixed(2)
                   : parseFloat(product.discount_price).toFixed(2)}

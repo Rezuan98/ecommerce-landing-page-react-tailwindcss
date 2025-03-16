@@ -52,7 +52,7 @@ const Featured = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/products/featured"
+          "https://dashboard.samiafashions.com/api/products/featured"
         );
 
         if (response.data.status === "success") {
@@ -154,7 +154,7 @@ const Featured = () => {
 
       // Submit order to API
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/orders",
+        "https://dashboard.samiafashions.com/api/orders",
         orderData
       );
 

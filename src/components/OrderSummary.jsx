@@ -34,7 +34,7 @@ const OrderSummary = ({
         <div className="flex justify-between">
           <span className="text-gray-600">Price:</span>
           <span className="font-medium">
-            ${parseFloat(item.price).toFixed(2)}
+            ৳{parseFloat(item.price).toFixed(2)}
           </span>
         </div>
 

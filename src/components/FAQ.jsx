@@ -4,7 +4,7 @@ import axios from "axios";
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [setError] = useState(null);
+  const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
 
   // Fetch FAQs from API
@@ -12,38 +12,49 @@ const FAQ = () => {
     const fetchFAQs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://127.0.0.1:8000/api/faqs/");
+        setError(null); // Reset error state before new request
 
-        // Log the response to see its structure
+        // Use the live API URL that we know is working
+        const response = await axios.get(
+          "https://dashboard.samiafashions.com/public/api/faqs"
+        );
+
         console.log("API Response:", response);
 
-        // Check if response has data property and handle accordingly
-        // Adjust this based on your actual API response structure
-        if (response.data && Array.isArray(response.data)) {
-          setFaqs(response.data);
+        // Handle the specific structure we saw in the API response
+        if (
+          response.data &&
+          response.data.faqs &&
+          Array.isArray(response.data.faqs)
+        ) {
+          console.log("Successfully loaded FAQs from API:", response.data.faqs);
+          setFaqs(response.data.faqs);
         } else if (
           response.data &&
-          response.data.data &&
+          response.data.status === "success" &&
           Array.isArray(response.data.data)
         ) {
-          // For APIs that wrap data in a data property
+          // Your standard API format
           setFaqs(response.data.data);
-        } else if (response.data) {
-          // If it's an object but not in the expected format
-          console.warn("Unexpected API response format:", response.data);
-          // Try to extract faqs from whatever structure is returned
+        } else if (response.data && Array.isArray(response.data)) {
+          // Direct array response
+          setFaqs(response.data);
+        } else if (response.data && typeof response.data === "object") {
+          // Try to extract FAQs from whatever structure is returned
           const extractedFaqs = extractFaqsFromResponse(response.data);
-          setFaqs(extractedFaqs);
+          if (extractedFaqs.length > 0) {
+            setFaqs(extractedFaqs);
+          } else {
+            throw new Error("Could not parse FAQs from response");
+          }
         } else {
           throw new Error("Invalid response format");
         }
-
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching FAQs:", err);
         setError("Failed to load FAQs");
 
-        // Fallback to static data for demo purposes
+        // Set fallback data
         setFaqs([
           {
             id: 1,
@@ -70,23 +81,26 @@ const FAQ = () => {
               "Once your order ships, you'll receive a tracking number via email to monitor your package's journey.",
           },
         ]);
-
+      } finally {
         setLoading(false);
       }
     };
 
     // Helper function to try and extract FAQs from various response formats
     const extractFaqsFromResponse = (responseData) => {
-      // Handle different possible response structures
-      if (responseData.faqs && Array.isArray(responseData.faqs)) {
-        return responseData.faqs;
+      // If it's an object with question/answer properties directly
+      if (responseData.question && responseData.answer) {
+        return [responseData];
       }
 
-      // Try to convert object to array if it has numeric keys
+      // Try to convert object to array if it has numeric keys or contains FAQ objects
       if (typeof responseData === "object" && !Array.isArray(responseData)) {
         const possibleArray = Object.values(responseData);
-        if (possibleArray.length > 0 && possibleArray[0].question) {
-          return possibleArray;
+        if (
+          possibleArray.length > 0 &&
+          possibleArray.some((item) => item.question && item.answer)
+        ) {
+          return possibleArray.filter((item) => item.question && item.answer);
         }
       }
 
@@ -141,7 +155,13 @@ const FAQ = () => {
           </h2>
           <div className="w-24 h-1 bg-black mx-auto mb-6"></div>
           <p className="text-gray-600 max-w-lg mx-auto">
-            Find answers to common questions about our products and services.
+            {error ? (
+              <span className="text-red-500">
+                {error} - Showing fallback data.
+              </span>
+            ) : (
+              "Find answers to common questions about our products and services."
+            )}
           </p>
         </div>
 

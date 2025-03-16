@@ -53,7 +53,9 @@ const FaviconManager = () => {
     // Then fetch the actual favicon from API
     const fetchFavicon = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/settings");
+        const response = await axios.get(
+          "https://dashboard.samiafashions.com/api/settings"
+        );
         if (
           response.data &&
           response.data.success &&
