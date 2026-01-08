@@ -37,7 +37,7 @@ const Hero = () => {
 
         // Fetch hero content
         const heroResponse = await axios.get(
-          "https://dashboard.samiafashions.com/api/hero"
+          "http://62.171.157.225:8084/api/hero"
         );
         if (heroResponse.data) {
           setHeroContent({
@@ -48,12 +48,12 @@ const Hero = () => {
 
         // Fetch sliders
         const slidersResponse = await axios.get(
-          "https://dashboard.samiafashions.com/api/sliders"
+          "http://62.171.157.225:8084/api/sliders"
         );
 
         // Format the data for our slider
         const formattedSliders = slidersResponse.data.map((slider) => ({
-          url: `https://dashboard.samiafashions.com/storage/${slider.image}`,
+          url: `http://62.171.157.225:8084/storage/${slider.image}`,
           alt: `Slider Image ${slider.id}`,
           id: slider.id,
           order: slider.order,
@@ -165,7 +165,7 @@ const Hero = () => {
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={scrollToCollection}
-                  className="bg-[#e773a3] text-black font-bold px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="bg-[#140648] text-white font-bold px-8 py-3 rounded-md hover:bg-[#140648] transition-all duration-300 shadow-lg hover:shadow-xl transform "
                 >
                   Shop Collection
                 </button>

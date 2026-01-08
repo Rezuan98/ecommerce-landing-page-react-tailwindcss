@@ -8,7 +8,7 @@ import FaviconManager from "./components/FaviconManager"; // Import the FaviconM
 
 function App() {
   return (
-    <div className="min-h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50" >
       {/* FaviconManager component to handle favicon updates */}
       <FaviconManager />
 

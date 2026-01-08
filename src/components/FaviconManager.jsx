@@ -54,7 +54,7 @@ const FaviconManager = () => {
     const fetchFavicon = async () => {
       try {
         const response = await axios.get(
-          "https://dashboard.samiafashions.com/api/settings"
+          "http://62.171.157.225:8084/api/settings"
         );
         if (
           response.data &&

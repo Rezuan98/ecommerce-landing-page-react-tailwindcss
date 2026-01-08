@@ -4,7 +4,7 @@ import axios from "axios";
 import FeaturedProductCard from "./FeaturedProductCard";
 import PurchaseModal from "./PurchaseModal";
 import ProductDetailsModal from "./ProductDetailsModal";
-import { LoadingIndicator, EmptyState } from "./UIComponents";
+import { EmptyState } from "./UIComponents";
 
 const Featured = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
@@ -13,7 +13,6 @@ const Featured = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [modalAnimation, setModalAnimation] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [showAllProducts, setShowAllProducts] = useState(false);
 
@@ -50,9 +49,8 @@ const Featured = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(
-          "https://dashboard.samiafashions.com/api/products/featured"
+          "http://62.171.157.225:8084/api/products/featured"
         );
 
         if (response.data.status === "success") {
@@ -66,8 +64,6 @@ const Featured = () => {
         }
       } catch (error) {
         console.error("Error fetching featured products:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -154,7 +150,7 @@ const Featured = () => {
 
       // Submit order to API
       const response = await axios.post(
-        "https://dashboard.samiafashions.com/api/orders",
+        "http://62.171.157.225:8084/api/orders",
         orderData
       );
 
@@ -255,9 +251,7 @@ const Featured = () => {
           </p>
         </div>
 
-        {loading ? (
-          <LoadingIndicator />
-        ) : products.length === 0 ? (
+        {products.length === 0 ? (
           <EmptyState message="No featured products available at the moment." />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -284,15 +278,17 @@ const Featured = () => {
           initialImage={selectedProductImage}
         />
 
-        {/* Always show the View All/Show Less button regardless of product count */}
-        <div className="text-center mt-12">
-          <button
-            onClick={() => setShowAllProducts(!showAllProducts)}
-            className="border border-black text-black px-8 py-3 rounded-md hover:bg-black hover:text-white transition-colors duration-300"
-          >
-            {showAllProducts ? "Show Less" : "View All Products"}
-          </button>
-        </div>
+        {/* Only show button if there are more than 8 products */}
+        {products.length > 8 && (
+          <div className="text-center mt-12">
+            <button
+              onClick={() => setShowAllProducts(!showAllProducts)}
+              className="border border-black text-black px-8 py-3 rounded-md hover:bg-black hover:text-white transition-colors duration-300"
+            >
+              {showAllProducts ? "Show Less" : "View All Products"}
+            </button>
+          </div>
+        )}
       </div>
 
       {modalOpen && selectedProduct && (

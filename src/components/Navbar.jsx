@@ -16,7 +16,7 @@ const Navbar = () => {
     const fetchSettings = async () => {
       try {
         const response = await axios.get(
-          "https://dashboard.samiafashions.com/api/settings"
+          "http://62.171.157.225:8084/api/settings"
         );
         console.log("Settings response:", response.data); // Debug log to see the actual structure
 
@@ -31,7 +31,7 @@ const Navbar = () => {
               setLogoUrl(logo);
             } else {
               // Assume the backend is expecting a relative path from the storage directory
-              setLogoUrl(`https://dashboard.samiafashions.com/storage/${logo}`);
+              setLogoUrl(`http://62.171.157.225:8084/storage/${logo}`);
             }
             console.log("Logo URL set to:", logoUrl);
           }
@@ -50,7 +50,7 @@ const Navbar = () => {
             link.rel = "icon";
             link.href = favicon.startsWith("http")
               ? favicon
-              : `https://dashboard.samiafashions.com/storage/${favicon}`;
+              : `http://62.171.157.225:8084/storage/${favicon}`;
             document.head.appendChild(link);
           }
         }
@@ -108,7 +108,7 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center justify-between h-10">
           {/* Logo with Link to Home */}
           <div className="flex-shrink-0">
             <Link
@@ -123,13 +123,13 @@ const Navbar = () => {
                 ) : (
                   <img
                     src={logoUrl}
-                    alt="Samia Fashion"
-                    className="h-50 w-auto object-contain"
+                    alt="revencomm"
+                    className="h-12 w-auto object-contain px-4"
                     onError={(e) => {
                       console.error("Logo failed to load:", logoUrl);
                       e.target.onerror = null;
                       e.target.src =
-                        "https://via.placeholder.com/150x50?text=Samia+Fashion";
+                        "http://62.171.157.225:8084/";
                     }}
                   />
                 )}
@@ -154,7 +154,7 @@ const Navbar = () => {
             ))}
             <div className="relative">
               <button
-                className="bg-[#e773a3] text-black font-bold px-4 py-2 rounded-md hover:bg-gray-800 hover:text-white ml-2 flex items-center"
+                className="bg-[#140648] text-white font-bold px-4 py-2 rounded-md hover:bg-gray-800 hover:text-white ml-2 flex items-center"
                 onClick={togglePhoneNumber}
               >
                 <PhoneIcon className="h-4 w-4 mr-2" />
@@ -219,7 +219,7 @@ const Navbar = () => {
           <div className="px-3 py-2">
             <a
               href={`tel:+${formatPhoneForTel(phoneNumber)}`}
-              className="w-full bg-[#e773a3] text-black font-bold px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
+              className="w-full bg-[#140648] text-white font-bold px-4 py-2 rounded-md hover:bg-gray-800 flex items-center justify-center"
             >
               <PhoneIcon className="h-4 w-4 mr-2" />
               Contact Us: {phoneNumber}

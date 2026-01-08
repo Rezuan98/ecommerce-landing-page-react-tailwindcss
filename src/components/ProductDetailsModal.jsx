@@ -32,7 +32,7 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://dashboard.samiafashions.com/api/products/${productId}`
+        `http://62.171.157.225:8084/api/products/${productId}`
       );
 
       if (response.data) {
@@ -138,103 +138,91 @@ const ProductDetailsModal = ({ isOpen, productId, onClose, initialImage }) => {
           </div>
         )}
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex justify-center items-center p-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-          </div>
-        ) : (
-          <>
-            {/* Product Content */}
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column - Product Images */}
-              <div>
-                {/* Main Image Display with Hover Zoom Capability */}
-                <div
-                  ref={imageContainerRef}
-                  className="rounded-lg overflow-hidden border border-gray-200 mb-4 h-64 md:h-80 relative cursor-zoom-in"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseMove={handleMouseMove}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {activeImage && (
-                    <>
-                      <img
-                        src={activeImage}
-                        alt={productDetails?.name}
-                        className={`w-full h-full object-contain transition-opacity duration-200 ${
-                          isZoomed ? "opacity-0" : "opacity-100"
-                        }`}
-                      />
-                      {isZoomed && (
-                        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
-                          <div
-                            className="absolute top-0 left-0 w-full h-full transform-gpu"
-                            style={{
-                              backgroundImage: `url(${activeImage})`,
-                              backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                              backgroundSize: "250%", // Increased zoom level
-                              backgroundRepeat: "no-repeat",
-                            }}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
-
-                  {/* Zoom indicator */}
-                  <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-                    Hover to zoom
-                  </div>
-                </div>
-
-                {/* Thumbnail Row */}
-                {productImages.length > 1 && (
-                  <div className="grid grid-cols-5 gap-2">
-                    {productImages.map((image, index) => (
+        {/* Product Content */}
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column - Product Images */}
+          <div>
+            {/* Main Image Display with Hover Zoom Capability */}
+            <div
+              ref={imageContainerRef}
+              className="rounded-lg overflow-hidden border border-gray-200 mb-4 h-64 md:h-80 relative cursor-zoom-in"
+              onMouseEnter={handleMouseEnter}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              {activeImage && (
+                <>
+                  <img
+                    src={activeImage}
+                    alt={productDetails?.name}
+                    className={`w-full h-full object-contain transition-opacity duration-200 ${
+                      isZoomed ? "opacity-0" : "opacity-100"
+                    }`}
+                  />
+                  {isZoomed && (
+                    <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
                       <div
-                        key={index}
-                        className={`border rounded-md overflow-hidden cursor-pointer h-16 ${
-                          activeImage === image
-                            ? "border-blue-500 ring-1 ring-blue-300"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                        onClick={() => handleImageChange(image)}
-                      >
-                        <img
-                          src={image}
-                          alt={`Product thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
+                        className="absolute top-0 left-0 w-full h-full transform-gpu"
+                        style={{
+                          backgroundImage: `url(${activeImage})`,
+                          backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                          backgroundSize: "250%",
+                          backgroundRepeat: "no-repeat",
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              
+            </div>
+
+            {/* Thumbnail Row */}
+            {productImages.length > 1 && (
+              <div className="grid grid-cols-5 gap-2">
+                {productImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`border rounded-md overflow-hidden cursor-pointer h-16 ${
+                      activeImage === image
+                        ? "border-blue-500 ring-1 ring-blue-300"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                    onClick={() => handleImageChange(image)}
+                  >
+                    <img
+                      src={image}
+                      alt={`Product thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                )}
+                ))}
               </div>
+            )}
+          </div>
 
-              {/* Right Column - Product Details */}
-              <div>
-                {/* Brand */}
-                <div className="text-sm text-gray-500 mb-1">
-                  {productDetails?.brand?.name}
-                </div>
+          {/* Right Column - Product Details */}
+          <div>
+            {/* Brand */}
+            <div className="text-sm text-gray-500 mb-1">
+              {productDetails?.brand?.name}
+            </div>
 
-                {/* Product Name */}
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-                  {productDetails?.name}
-                </h1>
+            {/* Product Name */}
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+              {productDetails?.name}
+            </h1>
 
-                {/* Product Description */}
-                <div className="mb-6">
-                  <h2 className="text-md font-semibold mb-2">Description:</h2>
-                  <div className="prose prose-sm text-gray-600">
-                    <p>{productDetails?.description}</p>
-                  </div>
-                </div>
+            {/* Product Description */}
+            <div className="mb-6">
+              <h2 className="text-md font-semibold mb-2">Description:</h2>
+              <div className="prose prose-sm text-gray-600">
+                <p>{productDetails?.description}</p>
               </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

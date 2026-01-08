@@ -30,7 +30,7 @@ const FeaturedProductCard = ({
               : product.image
           }
           alt={product.title}
-          className="w-full h-full object-cover transition-all duration-500 transform hover:scale-105"
+          className="w-full h-full object-contain transition-all duration-500 transform hover:scale-105"
         />
         <div className="absolute top-0 right-0 bg-red-500 text-white text-sm font-bold px-2 py-1 m-2 rounded">
           SALE

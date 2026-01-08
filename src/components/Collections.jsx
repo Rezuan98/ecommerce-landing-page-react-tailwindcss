@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import CollectionCard from "./CollectionCard";
 import PurchaseModal from "./PurchaseModal";
-import ProductDetailsModal from "./ProductDetailsModal"; // Make sure this import exists
+import ProductDetailsModal from "./ProductDetailsModal";
 
 const Collections = () => {
   const [hoveredCollection, setHoveredCollection] = useState(null);
@@ -12,7 +12,6 @@ const Collections = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [modalAnimation, setModalAnimation] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState([]);
   const [orderInfo, setOrderInfo] = useState({
     name: "",
@@ -48,9 +47,8 @@ const Collections = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(
-          "https://dashboard.samiafashions.com/api/products/collections"
+          "http://62.171.157.225:8084/api/products/collections"
         );
 
         if (response.data.status === "success") {
@@ -58,8 +56,6 @@ const Collections = () => {
         }
       } catch (error) {
         console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -137,7 +133,7 @@ const Collections = () => {
 
       // Submit order to API
       const response = await axios.post(
-        "https://dashboard.samiafashions.com/api/orders",
+        "http://62.171.157.225:8084/api/orders",
         orderData
       );
 
@@ -238,10 +234,10 @@ const Collections = () => {
           </p>
         </div>
 
-        {loading ? (
-          <LoadingIndicator />
-        ) : collections.length === 0 ? (
-          <EmptyState message="No products available at the moment." />
+        {collections.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-gray-600">No products available at the moment.</p>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {collections.map((collection) => (
@@ -264,12 +260,13 @@ const Collections = () => {
           onClose={closeProductDetailsModal}
           initialImage={selectedProductImage}
         />
-
+{collections.length > 8 && (
         <div className="text-center mt-12">
           <button className="border border-black text-black px-8 py-3 rounded-md hover:bg-black hover:text-white transition-colors duration-300">
             View All Collections
           </button>
         </div>
+)}
       </div>
 
       {modalOpen && selectedCollection && (
@@ -300,19 +297,5 @@ const Collections = () => {
     </section>
   );
 };
-
-// Ensure these components are imported or defined elsewhere
-const LoadingIndicator = () => (
-  <div className="text-center py-16">
-    <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-    <p className="mt-4 text-gray-600">Loading products...</p>
-  </div>
-);
-
-const EmptyState = ({ message }) => (
-  <div className="text-center py-16">
-    <p className="text-gray-600">{message}</p>
-  </div>
-);
 
 export default Collections;

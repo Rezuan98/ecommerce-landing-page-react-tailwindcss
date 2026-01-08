@@ -13,7 +13,7 @@ const Footer = () => {
     const fetchSocialLinks = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/footer-social"
+          "http://62.171.157.225:8084/api/footer-social"
         );
 
         if (response.data && response.data.status === "success") {
@@ -36,7 +36,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* Brand column */}
           <div className="md:w-1/3">
-            <h3 className="text-xl font-bold mb-3">Samia Fashion</h3>
+            <h3 className="text-xl font-bold mb-3">RevEnComm</h3>
             <p className="text-gray-400 mb-4">
               Premium clothing for the modern individual.
             </p>
@@ -104,11 +104,11 @@ const Footer = () => {
               Shop
             </h4>
             <ul className="space-y-2">
-              <li>
+              {/* <li>
                 <a href="#" className="text-gray-400 hover:text-white text-sm">
                   New Arrivals
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="#" className="text-gray-400 hover:text-white text-sm">
                   Collections
@@ -177,7 +177,7 @@ const Footer = () => {
         {/* Simple copyright bar */}
         <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between">
           <p className="text-sm text-gray-500 mb-4 md:mb-0">
-            © 2025 Samia Fashion. All rights reserved.
+            © 2026 RevEnComm. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a href="#" className="text-xs text-gray-500 hover:text-gray-400">

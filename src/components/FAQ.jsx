@@ -16,7 +16,7 @@ const FAQ = () => {
 
         // Use the live API URL that we know is working
         const response = await axios.get(
-          "https://dashboard.samiafashions.com/public/api/faqs"
+          "http://62.171.157.225:8084/public/api/faqs"
         );
 
         console.log("API Response:", response);
