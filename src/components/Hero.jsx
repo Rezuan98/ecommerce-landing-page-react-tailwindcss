@@ -199,7 +199,7 @@ const Hero = () => {
             <div className="flex flex-wrap gap-4">
               <button
                 onClick={scrollToCollection}
-                className="bg-[#e773a3] text-black font-bold px-8 py-3 rounded-md hover:bg-[#f7a9ca] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="bg-[#140648] text-white font-bold px-8 py-3 rounded-md hover:bg-[#140648] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 Shop Collection
               </button>
