@@ -124,7 +124,7 @@ const Hero = () => {
     // Reset transitioning state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 700);
+    }, 400);
   };
 
   const goToPrevious = () => {
@@ -135,7 +135,7 @@ const Hero = () => {
     // Reset transitioning state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 700);
+    }, 400);
   };
 
   const goToNext = () => {
@@ -146,7 +146,7 @@ const Hero = () => {
     // Reset transitioning state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 700);
+    }, 400);
   };
 
   // Render fallback during initial loading or if no sliders
@@ -243,7 +243,7 @@ const Hero = () => {
                   <img
                     src={image.url}
                     alt={image.alt}
-                    className="rounded-lg w-full h-full object-cover"
+                    className="rounded-lg w-full h-full object-contain"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-lg"></div>

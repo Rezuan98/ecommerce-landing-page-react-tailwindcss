@@ -20,7 +20,7 @@ const CollectionCard = ({
       onMouseLeave={() => setHoveredCollection(null)}
     >
       <div
-        className="relative overflow-hidden h-64 cursor-pointer"
+        className="relative overflow-hidden aspect-[3/4] cursor-pointer"
         onClick={() => openProductDetailsModal(collection.id, collection.image)}
       >
         <img
@@ -30,7 +30,7 @@ const CollectionCard = ({
               : collection.image
           }
           alt={collection.title}
-          className="w-full h-full object-cover transition-all duration-500 transform hover:scale-105"
+          className="w-full h-full object-contain transition-all duration-500 transform hover:scale-105"
         />
         {collection.featured && (
           <div className="absolute top-0 right-0 bg-blue-500 text-white text-sm font-bold px-2 py-1 m-2 rounded">

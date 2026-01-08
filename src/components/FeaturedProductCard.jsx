@@ -20,7 +20,7 @@ const FeaturedProductCard = ({
       onMouseLeave={() => setHoveredProduct(null)}
     >
       <div
-        className="relative overflow-hidden h-64 cursor-pointer"
+        className="relative overflow-hidden aspect-[3/4] cursor-pointer"
         onClick={() => openProductDetailsModal(product.id, product.image)}
       >
         <img
